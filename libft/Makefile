@@ -6,7 +6,7 @@
 #    By: mpetruno <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/05/25 18:27:37 by mpetruno          #+#    #+#              #
-#    Updated: 2018/10/23 15:03:54 by mpetruno         ###   ########.fr        #
+#    Updated: 2018/10/31 21:13:56 by mpetruno         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -114,20 +114,23 @@ $(NAME): $(OBJ_LIST)
 
 $(OBJ_DIR)%.o: $(SRC_DIR)%.c
 	@mkdir -p $(OBJ_DIR)
+	@mkdir -p $(OBJ_DIR)$(FT_PRINTF_DIR) #new line
 	@$(CC) $(FLAGS) -I $(INC_DIR) -c $^ -o $@
 
-$(OBJ_DIR)$(FT_PRINTF_DIR)%.o: $(SRC_DIR)$(FT_PRINTF_DIR)%.c
-	@mkdir -p $(OBJ_DIR)
-	@mkdir -p $(OBJ_DIR)$(FT_PRINTF_DIR)
-	@$(CC) $(FLAGS) -I $(INC_DIR) -c $^ -o $@
+#IS THIS NECESSARY??
+#$(OBJ_DIR)$(FT_PRINTF_DIR)%.o: $(SRC_DIR)$(FT_PRINTF_DIR)%.c
+#	@mkdir -p $(OBJ_DIR)
+#	@mkdir -p $(OBJ_DIR)$(FT_PRINTF_DIR)
+#	@$(CC) $(FLAGS) -I $(INC_DIR) -c $^ -o $@
+#	@echo "FILE FROM PRINTF COMPILED"
 
 clean:
-	@echo -n "Cleaning object files... "
+	@echo "Cleaning object files... "
 	@rm -rf $(OBJ_DIR)
 	@echo "Done."
 
 fclean: clean
-	@echo -n "Removing $(NAME)... "
+	@echo "Removing $(NAME)... "
 	@rm -f $(NAME)
 	@echo "Done."
 

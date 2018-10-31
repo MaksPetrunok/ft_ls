@@ -1,11 +1,16 @@
-
-// INSERT HEADER HERE
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mpetruno <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2018/10/31 20:55:01 by mpetruno          #+#    #+#             */
+/*   Updated: 2018/10/31 21:21:15 by mpetruno         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include <stdio.h> //remove
-#include <dirent.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-
 #include "ft_ls.h"
 
 static void	parse_flags(char *s, unsigned long int *fl)
@@ -27,24 +32,28 @@ static void	parse_flags(char *s, unsigned long int *fl)
 	}
 }
 
-
+/*
 static void	list_dir(char *path, unsigned long flags)
 {
-	/*
-	* While listing files and dirs, check if ISDIR(path) && -R. If so - call process_path.
-	*/
+	
+	//While listing files and dirs, check if ISDIR(path) && -R. If so - call process_path.
+	
 }
-
+*/
 static void	process_path(char *path, unsigned long flags)
 {
 //	DIR	*dstr = opendir(path);
 //	struct dirent	*dirp;
 	struct stat		path_stat;
 	
-	stat(path, &path_stat);
+	if (stat(path, &path_stat) == -1)
+	{
+		ft_printf("Error occured in stat() function.\n");
+		exit(1);
+	}
 	ft_printf("Path:      %s\n", path);
 	ft_printf("Flags:     %lu\n", flags);
-	ft_printf("Path type: %#o\n\n", path_stat.st_mode);
+	ft_printf("Path type: %#o\n", path_stat.st_mode);
 
 // if ISDIR(path) - list directory content
 // else - print path (with properties if required by flags)
@@ -78,9 +87,13 @@ static void	process_path(char *path, unsigned long flags)
 
 void	iter_paths(t_list *lst, unsigned long flags)
 {
+	int	flag;
+
+	flag = ft_lstsize(lst) > 1;
 	while (lst)
 	{
 		process_path((char *)(lst->content), flags);
+		write(1, "\n", flag);
 		lst = lst->next;
 	}
 }

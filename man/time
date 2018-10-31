@@ -1,0 +1,47 @@
+
+TIME(3)                  BSD Library Functions Manual                  TIME(3)
+
+NNAAMMEE
+     ttiimmee -- get time of day
+
+LLIIBBRRAARRYY
+     Standard C Library (libc, -lc)
+
+SSYYNNOOPPSSIISS
+     ##iinncclluuddee <<ttiimmee..hh>>
+
+     _t_i_m_e___t
+     ttiimmee(_t_i_m_e___t _*_t_l_o_c);
+
+DDEESSCCRRIIPPTTIIOONN
+     The ttiimmee() function returns the value of time in seconds since 0 hours, 0
+     minutes, 0 seconds, January 1, 1970, Coordinated Universal Time, without
+     including leap seconds.  If an error occurs, ttiimmee() returns the value
+     (_t_i_m_e___t)-1.
+
+     The return value is also stored in *_t_l_o_c, provided that _t_l_o_c is non-null.
+
+EERRRROORRSS
+     The ttiimmee() function may fail for any of the reasons described in
+     gettimeofday(2).
+
+SSEEEE AALLSSOO
+     gettimeofday(2), ctime(3)
+
+SSTTAANNDDAARRDDSS
+     The ttiimmee function conforms to IEEE Std 1003.1-2001 (``POSIX.1'').
+
+HHIISSTTOORRYY
+     A ttiimmee() function appeared in Version 6 AT&T UNIX.
+
+BBUUGGSS
+     Neither ISO/IEC 9899:1999 (``ISO C99'') nor IEEE Std 1003.1-2001
+     (``POSIX.1'') requires ttiimmee() to set _e_r_r_n_o on failure; thus, it is impos-
+     sible for an application to distinguish the valid time value -1 (repre-
+     senting the last UTC second of 1969) from the error return value.
+
+     Systems conforming to earlier versions of the C and POSIX standards
+     (including older versions of FreeBSD) did not set *_t_l_o_c in the error
+     case.
+
+BSD                              July 18, 2003                             BSD

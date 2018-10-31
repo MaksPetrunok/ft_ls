@@ -1,12 +1,22 @@
-
-// put header here
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_ls.h                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mpetruno <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2018/10/31 21:12:58 by mpetruno          #+#    #+#             */
+/*   Updated: 2018/10/31 21:13:03 by mpetruno         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #ifndef FT_LS_H
 # define FT_LS_H
 
-# include "../libft/includes/libft.h"
-
-// Mandatory flags: -l, -R, -a, -r and -t
+# include "libft.h"
+# include <dirent.h>
+# include <sys/types.h>
+# include <sys/stat.h>
 
 # define FLAGS	"alrRt"
 
