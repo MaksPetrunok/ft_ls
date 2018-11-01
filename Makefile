@@ -6,7 +6,7 @@
 #    By: mpetruno <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/05/25 18:27:37 by mpetruno          #+#    #+#              #
-#    Updated: 2018/10/31 21:12:38 by mpetruno         ###   ########.fr        #
+#    Updated: 2018/11/01 16:15:35 by mpetruno         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,7 +23,8 @@ LIB_DIR = ./libft/
 LIB_INC_DIR = $(LIB_DIR)includes/
 LIB = libft.a
 
-SRC_LIST = main.c
+SRC_LIST = main.c \
+		   err.c
 
 OBJ_LIST = $(addprefix $(OBJ_DIR), $(SRC_LIST:.c=.o))
 
