@@ -84,6 +84,7 @@ FUNC_LIST = memset \
 			lstdel \
 			lstfree \
 			lstadd \
+			lstins \
 			lstiter \
 			lstsize \
 			lstmap \
@@ -125,14 +126,12 @@ $(OBJ_DIR)%.o: $(SRC_DIR)%.c
 #	@echo "FILE FROM PRINTF COMPILED"
 
 clean:
-	@echo "Cleaning object files... "
+	@echo "$(NAME): Cleaning object files... "
 	@rm -rf $(OBJ_DIR)
-	@echo "Done."
 
 fclean: clean
-	@echo "Removing $(NAME)... "
+	@echo "$(NAME): Removing $(NAME)... "
 	@rm -f $(NAME)
-	@echo "Done."
 
 re: fclean all
 

@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   err.c                                              :+:      :+:    :+:   */
+/*   free.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mpetruno <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -12,16 +12,13 @@
 
 #include "ft_ls.h"
 
-void	perror_exit(void)
+void	free_path(void *content, size_t size)
 {
-	perror(PROGRAM_NAME);
-	exit(1);
-}
+	t_path  *tmp;
 
-void	error_option(char opt)
-{
-	ft_dprintf(2,
-		"%s: illegal option -- %c\nusage: ls [-%s] [file ...]\n",
-		PROGRAM_NAME, opt, FLAGS);
-	exit(1);
+	(void)size;
+	tmp = (t_path *)content;
+	free((void *)(tmp->name));
+	free((void *)(tmp->pstat));
+	free((void *)tmp);
 }

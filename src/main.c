@@ -12,8 +12,6 @@
 
 #include "ft_ls.h"
 
-#define ISDIR(X) (0040000 & X)
-
 unsigned long int	g_flags;
 
 static void	parse_flags(char *s)
@@ -27,96 +25,51 @@ static void	parse_flags(char *s)
 		if ((p = ft_strchr(ref, *s)) != 0)
 			g_flags |= 1U << (int)(p - ref);
 		else
-		{
-			ft_dprintf(2,
-			"ft_ls: illegal option -- %c\nusage: ls [-%s] [file ...]\n",
-			*s, FLAGS);
-			exit(1);
-		}
+			error_option(*s);
 		s++;
 	}
 }
 
-static void	list_dir(char *path, t_list **subdirlst)
+static void	pathtolist(char *name, t_list **files, t_list **dirs)
 {
-	DIR				*dstr;
-	struct dirent	*dirp;
-	struct stat		path_stat;
+	t_list		*elem;
+	t_path		*path;
+	struct stat	*pstat;
 
-	errno = 0;
-	if ((dstr = opendir(path)) == 0)
+	pstat = (struct stat *)malloc(sizeof(struct stat));
+	path = (t_path *)malloc(sizeof(t_path));
+	if (!pstat || !path)
 		perror_exit();
-	errno = 0;
-	while ((dirp = readdir(dstr)) != 0)
-	{
-		ft_printf(">%-15s\n", dirp->d_name);
-		errno = 0;
-		//whole lotta LEAKS from double ft_strjoin():
-		char *s = ft_strjoin(path, ft_strjoin("/", dirp->d_name));
-		if (stat(s, &path_stat) == -1)
-			perror_exit();
-
-		if (ISFLAG_RR(g_flags) && ISDIR(path_stat.st_mode))
-		{
-			ft_lstadd(subdirlst,
-				ft_lstnew((void *)s, ft_strlen(s) + 1));
-		}
-
-	}
-	if (errno != 0 && dirp == 0)
+	if (stat(name, pstat) == -1)
 		perror_exit();
-	closedir(dstr);
-}
-
-static void	process_path(char *path)
-{
-	struct stat		path_stat;
-	t_list			*subdirlst;
-	
-	subdirlst = 0;
-	errno = 0;
-	if (stat(path, &path_stat) == -1)
+	path->name = ft_strdup(name);
+	path->ino = pstat->st_ino;
+	path->pstat = pstat;
+	if ((elem = ft_lstnew((void *)path, sizeof(path))) == 0)
 		perror_exit();
-	if ISDIR(path_stat.st_mode)
-		list_dir(path, &subdirlst);
+	if (ISDIR(pstat->st_mode))
+		ft_lstins(dirs, elem, &sort);
 	else
-		ft_printf("%s\n", path);
-
-	if (ISFLAG_RR(g_flags) && subdirlst != 0)
-	{
-		iter_paths(subdirlst);
-		ft_lstfree(&subdirlst);
-	}
+		ft_lstins(files, elem, &sort);
 }
 
-void	iter_paths(t_list *lst)
+int			main(int ac, char **av)
 {
-	int	size;
+	t_list	*filelst;
+	t_list	*dirlst;
 
-	size = ft_lstsize(lst);
-	while (lst)
-	{
-		process_path((char *)(lst->content));
-		write(1, "\n", size-- > 1);
-		lst = lst->next;
-	}
-}
-
-int main(int ac, char **av)
-{
-	t_list			*files;
-
-	files = 0;
 	g_flags = 0;
+	filelst = 0;
+	dirlst = 0;
 	while (--ac > 0)
 		if (av[ac][0] == '-')
 			parse_flags(av[ac] + 1);
 		else
-			ft_lstadd(&files, ft_lstnew(av[ac], ft_strlen(av[ac]) + 1));
-	if (files == 0)
-		files = ft_lstnew(".", 2);
-	iter_paths(files);
-	ft_lstfree(&files);
+			pathtolist(av[ac], &filelst, &dirlst);
+	if (!filelst && !dirlst)
+		pathtolist(".", &filelst, &dirlst);
+	list_initial(filelst, dirlst);
+	ft_lstdel(&dirlst, &free_path);
 //system("leaks ft_ls");
 	return (0);
 }

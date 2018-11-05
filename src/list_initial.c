@@ -1,27 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   err.c                                              :+:      :+:    :+:   */
+/*   list_initial.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mpetruno <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/11/01 16:13:58 by mpetruno          #+#    #+#             */
-/*   Updated: 2018/11/01 16:15:17 by mpetruno         ###   ########.fr       */
+/*   Created: 2018/10/31 20:55:01 by mpetruno          #+#    #+#             */
+/*   Updated: 2018/11/01 17:10:55 by mpetruno         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
 
-void	perror_exit(void)
+void	list_initial(t_list *files, t_list *dirs)
 {
-	perror(PROGRAM_NAME);
-	exit(1);
-}
+	int	print_dir_name;
+	int	size;
 
-void	error_option(char opt)
-{
-	ft_dprintf(2,
-		"%s: illegal option -- %c\nusage: ls [-%s] [file ...]\n",
-		PROGRAM_NAME, opt, FLAGS);
-	exit(1);
+	size = ft_lstsize(dirs);
+	print_dir_name = size > 1 || (files && dirs);
+	list_files(files);
+	if (files && dirs)
+		write(1, "\n", 1);
+	ft_lstdel(&files, &free_path);
+	while (dirs)
+	{
+		if (print_dir_name)
+			ft_printf("%s:\n", VP(dirs->content)->name);
+		list_dir(dirs);
+		if (size-- > 1)
+			write(1, "\n", 1);
+		dirs = dirs->next;
+	}
 }

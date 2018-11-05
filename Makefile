@@ -24,7 +24,11 @@ LIB_INC_DIR = $(LIB_DIR)includes/
 LIB = libft.a
 
 SRC_LIST = main.c \
-		   err.c
+		   list_initial.c \
+		   list_names.c \
+		   err.c \
+		   free.c \
+		   sort.c
 
 OBJ_LIST = $(addprefix $(OBJ_DIR), $(SRC_LIST:.c=.o))
 
@@ -42,16 +46,14 @@ $(OBJ_DIR)%.o: $(SRC_DIR)%.c
 	@$(CC) $(FLAGS) -I $(INC_DIR) -I $(LIB_INC_DIR) -c $^ -o $@
 
 clean:
-	@echo "Cleaning object files... "
+	@echo "$(NAME): Cleaning object files... "
 	@rm -rf $(OBJ_DIR)
 	@make -C $(LIB_DIR) clean --silent
-	@echo "Done."
 
 fclean: clean
-	@echo "Removing $(NAME)... "
+	@echo "$(NAME): Removing $(NAME)... "
 	@rm -f $(NAME)
 	@make -C $(LIB_DIR) fclean --silent
-	@echo "Done."
 
 re: fclean all
 

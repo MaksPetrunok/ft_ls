@@ -1,27 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   err.c                                              :+:      :+:    :+:   */
+/*   sort.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mpetruno <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/11/01 16:13:58 by mpetruno          #+#    #+#             */
-/*   Updated: 2018/11/01 16:15:17 by mpetruno         ###   ########.fr       */
+/*   Created: 2018/10/31 20:55:01 by mpetruno          #+#    #+#             */
+/*   Updated: 2018/11/01 17:10:55 by mpetruno         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
 
-void	perror_exit(void)
+int	sort_names(void *a, void *b)
 {
-	perror(PROGRAM_NAME);
-	exit(1);
+	return (ft_strcmp(((t_path *)a)->name, ((t_path *)b)->name));
 }
 
-void	error_option(char opt)
+int	sort_toend(void *a, void *b)
 {
-	ft_dprintf(2,
-		"%s: illegal option -- %c\nusage: ls [-%s] [file ...]\n",
-		PROGRAM_NAME, opt, FLAGS);
-	exit(1);
+	a = a;
+	b = b;
+	return (-1);
+}
+
+int	sort(void *a, void *b)
+{
+	if (ISFLAG_F(g_flags))
+		return (0);
+	else
+		return ((ISFLAG_R(g_flags)) ?
+			-ft_strcmp(((t_path *)a)->name, ((t_path *)b)->name) :
+			ft_strcmp(((t_path *)a)->name, ((t_path *)b)->name));
 }
