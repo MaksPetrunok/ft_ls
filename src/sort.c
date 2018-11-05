@@ -6,7 +6,7 @@
 /*   By: mpetruno <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/31 20:55:01 by mpetruno          #+#    #+#             */
-/*   Updated: 2018/11/01 17:10:55 by mpetruno         ###   ########.fr       */
+/*   Updated: 2018/11/05 14:18:52 by mpetruno         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,8 @@ int	sort_names(void *a, void *b)
 
 int	sort_toend(void *a, void *b)
 {
-	a = a;
-	b = b;
+	if (a || b)
+		a = b;
 	return (-1);
 }
 

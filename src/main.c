@@ -6,7 +6,7 @@
 /*   By: mpetruno <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/31 20:55:01 by mpetruno          #+#    #+#             */
-/*   Updated: 2018/11/01 17:10:55 by mpetruno         ###   ########.fr       */
+/*   Updated: 2018/11/05 21:30:07 by mpetruno         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,20 +34,22 @@ static void	pathtolist(char *name, t_list **files, t_list **dirs)
 {
 	t_list		*elem;
 	t_path		*path;
-	struct stat	*pstat;
+	struct stat	*buff;
 
-	pstat = (struct stat *)malloc(sizeof(struct stat));
-	path = (t_path *)malloc(sizeof(t_path));
-	if (!pstat || !path)
+	elem = malloc(sizeof(t_list));
+	buff = malloc(sizeof(struct stat));
+	path = malloc(sizeof(t_path));
+	if (!buff || !path || !elem)
 		perror_exit();
-	if (stat(name, pstat) == -1)
+	if (stat(name, buff) == -1)
 		perror_exit();
 	path->name = ft_strdup(name);
-	path->ino = pstat->st_ino;
-	path->pstat = pstat;
-	if ((elem = ft_lstnew((void *)path, sizeof(path))) == 0)
-		perror_exit();
-	if (ISDIR(pstat->st_mode))
+	path->ino = buff->st_ino;
+	path->pstat = buff;
+	elem->content = (void *)path;
+	elem->content_size = sizeof(*path);
+	elem->next = 0;
+	if (ISDIR(buff->st_mode))
 		ft_lstins(dirs, elem, &sort);
 	else
 		ft_lstins(files, elem, &sort);
@@ -68,6 +70,7 @@ int			main(int ac, char **av)
 			pathtolist(av[ac], &filelst, &dirlst);
 	if (!filelst && !dirlst)
 		pathtolist(".", &filelst, &dirlst);
+//ft_printf("HERE\n");
 	list_initial(filelst, dirlst);
 	ft_lstdel(&dirlst, &free_path);
 //system("leaks ft_ls");

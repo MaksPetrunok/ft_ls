@@ -6,7 +6,7 @@
 /*   By: mpetruno <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/31 21:12:58 by mpetruno          #+#    #+#             */
-/*   Updated: 2018/11/01 17:34:21 by mpetruno         ###   ########.fr       */
+/*   Updated: 2018/11/05 19:01:40 by mpetruno         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 # include <dirent.h>
 # include <sys/types.h>
 # include <sys/stat.h>
+# include <sys/ioctl.h>
 
 # define PROGRAM_NAME "ft_ls"
 # define FLAGS	"alrRtdfi"

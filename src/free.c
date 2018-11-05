@@ -6,7 +6,7 @@
 /*   By: mpetruno <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/01 16:13:58 by mpetruno          #+#    #+#             */
-/*   Updated: 2018/11/01 16:15:17 by mpetruno         ###   ########.fr       */
+/*   Updated: 2018/11/05 20:44:16 by mpetruno         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,9 @@ void	free_path(void *content, size_t size)
 	(void)size;
 	tmp = (t_path *)content;
 	free((void *)(tmp->name));
+//printf("tmp->name: %s freed, next %p\n",tmp->name, tmp->pstat);
 	free((void *)(tmp->pstat));
-	free((void *)tmp);
+//printf("tmp->pstat freed\n");
+	free(content);
+//printf("tmp       freed\n");
 }

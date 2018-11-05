@@ -6,7 +6,7 @@
 #    By: mpetruno <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/05/25 18:27:37 by mpetruno          #+#    #+#              #
-#    Updated: 2018/11/01 16:15:35 by mpetruno         ###   ########.fr        #
+#    Updated: 2018/11/05 20:54:17 by mpetruno         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,6 +26,7 @@ LIB = libft.a
 SRC_LIST = main.c \
 		   list_initial.c \
 		   list_names.c \
+		   list_files.c \
 		   err.c \
 		   free.c \
 		   sort.c
