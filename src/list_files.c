@@ -43,9 +43,9 @@ void	print_table(t_list	*lst)
 	i = 1;
 	while (lst)
 	{
-		ft_printf("%-*s", width, VP(lst->content)->name);
 		if (i % col == 0)
 			i = ft_printf("\n");
+		ft_printf("%-*s", width, VP(lst->content)->name);
 		i++;
 		lst = lst->next;
 	}
@@ -62,8 +62,12 @@ void	list_files(t_list *lst)
 		if (ISFLAG_I(g_flags))
 			ft_printf("%d %s\n", VP(lst->content)->ino, VP(lst->content)->name);
 		else
-			ft_printf("%s\n", VP(lst->content)->name);
+		{
+			ft_printf("%s", VP(lst->content)->path);
+			VP(lst->content)->pstat == 0 ? ft_printf("\n") :
+				 ft_printf("%mode_dir: %#o\n", VP(lst->content)->pstat->st_mode);
 		lst = lst->next;
+		}
 	}
 	else
 		print_table(lst);

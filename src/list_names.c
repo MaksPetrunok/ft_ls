@@ -17,8 +17,9 @@ static char	*add_parent(const char *name, const char *parent)
 	char	*dir;
 	char	*res;
 
-	if ((dir = ft_strjoin(parent, "/")) == 0)
-		perror_exit();
+//	if (ft_strcmp("/", parent))
+		if ((dir = ft_strjoin(parent, "/")) == 0)
+			perror_exit();
 	if ((res = ft_strjoin(dir, name)) == 0)
 		perror_exit();
 	free((void *)dir);
@@ -44,6 +45,7 @@ static t_list *tlstdup(t_list *elem)
 		ft_memcpy(buff, (VP(elem->content)->pstat), sizeof(struct stat));
 	}
 	path->name = ft_strdup(VP(elem->content)->name);
+	path->path = ft_strdup(VP(elem->content)->path);
 	path->ino = VP(elem->content)->ino;
 	path->pstat = buff;
 	lst->content = (void *)path;
@@ -52,7 +54,7 @@ static t_list *tlstdup(t_list *elem)
 	return (lst);
 }
 
-static t_list	*pathtolist(char *name, int ino, t_list **names)
+static t_list	*pathtolist(char *name, char *npath, int ino, t_list **names)
 {
 	t_list		*elem;
 	t_path		*path;
@@ -61,14 +63,17 @@ static t_list	*pathtolist(char *name, int ino, t_list **names)
 	path = malloc(sizeof(t_path));
 	if (!(path && elem))
 		perror_exit();
-	path->name = name;
+	path->name = ft_strdup(name);
+	path->path = npath;
 	path->ino = ino;
 	path->pstat = 0;
 	if (ISFLAG_RR(g_flags) || ISFLAG_L(g_flags))
 	{
 		if ((path->pstat = (struct stat *)malloc(sizeof(struct stat))) == 0)
 			perror_exit();
-		if (stat(name, path->pstat) == -1)
+// stat or lstat?
+		if (ISFLAG_LL(g_flags) ? lstat(path->path, path->pstat) == -1 :
+			stat(path->path, path->pstat) == -1)
 			perror_exit();
 	}
 	elem->content = (void *)path;
@@ -81,9 +86,6 @@ static t_list	*pathtolist(char *name, int ino, t_list **names)
 	return (0);
 }
 
-// READ THIS!!!!!!!!!!!!!!!!!
-// For -R and recursion implementation
-// DO NOT include directories ".." to lists!
 void	list_dir(t_list *lst)
 {
 	DIR				*dstr;
@@ -93,31 +95,35 @@ void	list_dir(t_list *lst)
 	t_list			*tmp;
 
 	errno = 0;
-	if ((dstr = opendir(VP(lst->content)->name)) == 0)
+	if ((dstr = opendir(VP(lst->content)->path)) == 0)
+	{
+ft_printf("WHILE opening dir\n");
+struct stat ps;
+stat(VP(lst->content)->path, &ps);
+ft_printf("MODE: %#b\n", ps.st_mode);
+ft_printf("%#b\n", 040000);
 		perror_exit();
+	}
 	names = 0;
 	subdirs = 0;
-//	if (print_dir)
-//		ft_printf("%s:\n", VP(lst->content)->name);
 	while ((dirp = readdir(dstr)) != 0)
 	{
 		if (*(dirp->d_name) == '.' && !ISFLAG_A(g_flags))
 			continue ;
-		tmp = pathtolist(add_parent(dirp->d_name, VP(lst->content)->name),
+		tmp = pathtolist(dirp->d_name, add_parent(dirp->d_name, VP(lst->content)->path),
 				dirp->d_ino, &names);
 		if (ISFLAG_RR(g_flags) && tmp)
 			ft_lstins(&subdirs, tmp, &sort);
 	}
 	if (errno != 0 && dirp == 0)
 		perror_exit();
+	closedir(dstr);
 	list_files(names);
 	ft_lstdel(&names, &free_path);
-	closedir(dstr);
-
-	if (subdirs)
-	{
-//		ft_printf("\nRECURSION...\n");
-		ft_lstiter(subdirs, &list_dir);
-	}
+if (subdirs)
+ft_printf("\n");
+	iter_dirs(subdirs, 1);
+//	if (subdirs)
+//		ft_lstiter(subdirs, &list_dir);
 	ft_lstdel(&subdirs, &free_path);
 }

@@ -22,7 +22,7 @@
 # include <sys/ioctl.h>
 
 # define PROGRAM_NAME "ft_ls"
-# define FLAGS	"alrRtdfi"
+# define FLAGS	"alrRtdfimL"
 
 // REPLACE bit offset with numbers
 # define F_A	1U << 0 
@@ -33,6 +33,8 @@
 # define F_D	1U << 5
 # define F_F	1U << 6
 # define F_I	1U << 7
+# define F_M	1U << 8
+# define F_LL	1U << 9
 
 # define ISFLAG_A(X) (F_A & X)
 # define ISFLAG_L(X) (F_L & X)
@@ -42,24 +44,27 @@
 # define ISFLAG_D(X) (F_D & X)
 # define ISFLAG_F(X) (F_F & X)
 # define ISFLAG_I(X) (F_I & X)
+# define ISFLAG_M(X) (F_M & X)
+# define ISFLAG_LL(X) (F_LL & X)
 
 
+//# define ISDIR(X) ((0040000 & X) && !(0020000 & X))
 # define ISDIR(X) (0040000 & X)
 # define VP(X) ((t_path *)(X))
 extern unsigned long int	g_flags;
 
 typedef struct	s_path
 {
-	char		*name;
+	const char	*name;
+	const char	*path;
 	int			ino;
-//	char		*dir;
 	struct stat	*pstat;
-//	t_list		*names;
 }				t_path;
 
 void	free_path(void *content, size_t size);
 
-void	list_initial(t_list *files, t_list *dirs);
+void	iter_dirs(t_list *dirs, int print_dir_name);
+void	process_input(t_list *files, t_list *dirs);
 void	list_files(t_list *lst);
 void	list_dir(t_list *lst);
 

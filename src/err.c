@@ -14,6 +14,8 @@
 
 void	perror_exit(void)
 {
+if (errno = ENOENT)
+ft_printf("error here\n");
 	perror(PROGRAM_NAME);
 	exit(1);
 }

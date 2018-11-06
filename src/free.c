@@ -18,8 +18,11 @@ void	free_path(void *content, size_t size)
 
 	(void)size;
 	tmp = (t_path *)content;
+
 	free((void *)(tmp->name));
 //printf("tmp->name: %s freed, next %p\n",tmp->name, tmp->pstat);
+	free((void *)(tmp->path));
+//printf("tmp->path: %s freed, next %p\n",tmp->path, tmp->pstat);
 	free((void *)(tmp->pstat));
 //printf("tmp->pstat freed\n");
 	free(content);

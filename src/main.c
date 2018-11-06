@@ -44,6 +44,7 @@ static void	pathtolist(char *name, t_list **files, t_list **dirs)
 	if (stat(name, buff) == -1)
 		perror_exit();
 	path->name = ft_strdup(name);
+	path->path = ft_strdup(name);
 	path->ino = buff->st_ino;
 	path->pstat = buff;
 	elem->content = (void *)path;
@@ -70,9 +71,7 @@ int			main(int ac, char **av)
 			pathtolist(av[ac], &filelst, &dirlst);
 	if (!filelst && !dirlst)
 		pathtolist(".", &filelst, &dirlst);
-//ft_printf("HERE\n");
-	list_initial(filelst, dirlst);
-	ft_lstdel(&dirlst, &free_path);
+	process_input(filelst, dirlst);
 //system("leaks ft_ls");
 	return (0);
 }
