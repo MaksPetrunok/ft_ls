@@ -6,7 +6,7 @@
 /*   By: mpetruno <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/05 20:52:09 by mpetruno          #+#    #+#             */
-/*   Updated: 2018/11/05 20:52:46 by mpetruno         ###   ########.fr       */
+/*   Updated: 2018/11/07 16:00:42 by mpetruno         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,22 +34,31 @@ void	print_table(t_list	*lst)
 	int				width;
 	int				i;
 
-//	if (ioctl(STDOUT_FILENO, TIOCGWINSZ, &ws) == -1)
-	if (ioctl(0, TIOCGWINSZ, &ws) == -1)
-		perror_exit();
-	col = ws.ws_col / (max_len(lst) + 2);
-	width = ws.ws_col / col;
+	if (ioctl(STDOUT_FILENO, TIOCGWINSZ, &ws) != -1 && !ISFLAG_1(g_flags))
+	{
+		width = max_len(lst) + 2;
+		col = ws.ws_col / width;
+		col = (col) ? col : 1;
+	}
+	else
+	{
+		col = 1;
+		width = 0;
+	}
 
 	i = 1;
 	while (lst)
 	{
-		if (i % col == 0)
-			i = ft_printf("\n");
+		if (i % col == 0 && col != 1)
+			i = (int)ft_printf("\n");
 		ft_printf("%-*s", width, VP(lst->content)->name);
+		if (col == 1)
+			ft_printf("\n");
 		i++;
 		lst = lst->next;
 	}
-	ft_printf("\n");
+	if (col != 1)
+		ft_printf("\n");
 }
 
 void	list_files(t_list *lst)

@@ -6,7 +6,7 @@
 /*   By: mpetruno <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/31 20:55:01 by mpetruno          #+#    #+#             */
-/*   Updated: 2018/11/05 17:43:45 by mpetruno         ###   ########.fr       */
+/*   Updated: 2018/11/07 14:45:08 by mpetruno         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void	process_input(t_list *files, t_list *dirs)
 	if (files && dirs)
 		write(1, "\n", 1);
 	ft_lstdel(&files, &free_path);
-	iter_dirs(dirs, print_dir_name || ISFLAG_RR(g_flags));
+	iter_dirs(dirs, print_dir_name);
 	ft_lstdel(&dirs, &free_path);
 }
 

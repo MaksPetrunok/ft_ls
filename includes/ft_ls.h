@@ -6,7 +6,7 @@
 /*   By: mpetruno <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/31 21:12:58 by mpetruno          #+#    #+#             */
-/*   Updated: 2018/11/05 19:01:40 by mpetruno         ###   ########.fr       */
+/*   Updated: 2018/11/07 17:19:48 by mpetruno         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@
 # include <sys/ioctl.h>
 
 # define PROGRAM_NAME "ft_ls"
-# define FLAGS	"alrRtdfimL"
+# define FLAGS	"alrRtdfimL1"
 
 // REPLACE bit offset with numbers
 # define F_A	1U << 0 
@@ -35,6 +35,7 @@
 # define F_I	1U << 7
 # define F_M	1U << 8
 # define F_LL	1U << 9
+# define F_ONE	1U << 10
 
 # define ISFLAG_A(X) (F_A & X)
 # define ISFLAG_L(X) (F_L & X)
@@ -46,11 +47,18 @@
 # define ISFLAG_I(X) (F_I & X)
 # define ISFLAG_M(X) (F_M & X)
 # define ISFLAG_LL(X) (F_LL & X)
+# define ISFLAG_1(X) (F_ONE & X)
 
-
-//# define ISDIR(X) ((0040000 & X) && !(0020000 & X))
-# define ISDIR(X) (0040000 & X)
+# define ISFIFO(X) ((S_IFMT & X) == S_IFIFO)
+# define ISCHR(X) ((S_IFMT & X) == S_IFCHR)
+# define ISDIR(X) ((S_IFMT & X) == S_IFDIR)
+# define ISBLK(X) ((S_IFMT & X) == S_IFBLK)
+# define ISREG(X) ((S_IFMT & X) == S_IFREG)
+# define ISLNK(X) ((S_IFMT & X) == S_IFLNK)
+# define ISSOCK(X) ((S_IFMT & X) == S_IFSOCK)
+# define ISWHT(X) ((S_IFMT & X) == S_IFWHT)
 # define VP(X) ((t_path *)(X))
+
 extern unsigned long int	g_flags;
 
 typedef struct	s_path
@@ -68,11 +76,11 @@ void	process_input(t_list *files, t_list *dirs);
 void	list_files(t_list *lst);
 void	list_dir(t_list *lst);
 
-void    perror_exit(void);
+void    perror_exit(const char *s);
+void    perror_report(const char *s);
 void	error_option(char c);
 
 int		sort(void *a, void *b);
-int		sort_names(void *a, void *b);
 
 void	get_path(char *name, t_path *buff);
 void	print_paths(t_list *lst, int printdirname);

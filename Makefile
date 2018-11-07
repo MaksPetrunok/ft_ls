@@ -6,7 +6,7 @@
 #    By: mpetruno <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/05/25 18:27:37 by mpetruno          #+#    #+#              #
-#    Updated: 2018/11/05 20:54:17 by mpetruno         ###   ########.fr        #
+#    Updated: 2018/11/07 10:19:23 by mpetruno         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,7 +21,7 @@ OBJ_DIR = ./obj/
 INC_DIR = ./includes/
 LIB_DIR = ./libft/
 LIB_INC_DIR = $(LIB_DIR)includes/
-LIB = libft.a
+LIB = $(LIB_DIR)libft.a
 
 SRC_LIST = main.c \
 		   list_initial.c \
@@ -36,7 +36,7 @@ OBJ_LIST = $(addprefix $(OBJ_DIR), $(SRC_LIST:.c=.o))
 all: $(NAME)
 
 $(NAME): $(LIB) $(OBJ_LIST)
-	@$(CC) $(OBJ_LIST) $(LIB_DIR)$(LIB) -o $(NAME)
+	@$(CC) $(OBJ_LIST) $(LIB) -o $(NAME)
 	@echo "$(NAME) - Done."
 
 $(LIB):

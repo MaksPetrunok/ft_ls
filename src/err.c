@@ -6,17 +6,40 @@
 /*   By: mpetruno <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/01 16:13:58 by mpetruno          #+#    #+#             */
-/*   Updated: 2018/11/01 16:15:17 by mpetruno         ###   ########.fr       */
+/*   Updated: 2018/11/07 17:01:52 by mpetruno         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
 
-void	perror_exit(void)
+void	perror_report(const char *str)
 {
-if (errno = ENOENT)
-ft_printf("error here\n");
-	perror(PROGRAM_NAME);
+	char	*s;
+	char	*msg;
+   
+	if (*str)
+		s = ft_strjoin(PROGRAM_NAME, ": ");
+	else
+		s = ft_strnew(0);
+	msg = ft_strjoin(s, str);
+	if (!(s && msg))
+		perror_exit("");
+	perror(msg);
+	free((void *)(s));
+	free((void *)(msg));
+}
+
+void	perror_exit(const char *str)
+{
+	char *s;
+
+	if (*str)
+	{
+		s = ft_strjoin(PROGRAM_NAME, ": ");
+		perror(ft_strjoin(s, str));
+	}
+	else
+		perror(PROGRAM_NAME);
 	exit(1);
 }
 
