@@ -39,6 +39,7 @@ void	print_table(t_list	*lst)
 		width = max_len(lst) + 2;
 		col = ws.ws_col / width;
 		col = (col) ? col : 1;
+ft_printf("COL=%d, w=%d\n", col, width);
 	}
 	else
 	{

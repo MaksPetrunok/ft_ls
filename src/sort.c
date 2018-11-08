@@ -12,14 +12,27 @@
 
 #include "ft_ls.h"
 
+/*
+struct timespec {
+	time_t	tv_sec;		// seconds
+	int32_t	tv_nsec;	// and nanoseconds
+};
+*/
+
 static int	sort_mtime(void *a, void *b)
 {
-	t_path	*tmp1;
+	struct timespec	ta;
+	struct timespec	tb;
+// 	UNIX:
+//	a = VP(a)->pstat->st_mtime;
+//	b = VP(b)->pstat->st_mtime;
+//	LINUX:
 
-	if (a || b)
-		a = b;
-	//see types.h for struct timespec definition
-	return (-1);
+	ta = VP(a)->pstat->st_mtim;
+	tb = VP(b)->pstat->st_mtim;
+	if (ta.tv_sec != tb.tv_sec)
+		return (ta.tv_sec < tb.tv_sec);
+	return (ta.tv_nsec < tb.tv_nsec);
 }
 
 int	sort(void *a, void *b)

@@ -66,7 +66,7 @@ static t_list	*pathtolist(char *name, char *npath, int ino, t_list **names)
 	path->path = npath;
 	path->ino = ino;
 	path->pstat = 0;
-	if (ISFLAG_RR(g_flags) || ISFLAG_L(g_flags))
+	if (ISFLAG_RR(g_flags) || ISFLAG_L(g_flags) || ISFLAG_T(g_flags))
 	{
 		if ((path->pstat = (struct stat *)malloc(sizeof(struct stat))) == 0)
 			perror_exit("");
