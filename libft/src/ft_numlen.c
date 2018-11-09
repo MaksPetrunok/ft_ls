@@ -1,39 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   free.c                                             :+:      :+:    :+:   */
+/*   ft_numlen.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mpetruno <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/11/01 16:13:58 by mpetruno          #+#    #+#             */
-/*   Updated: 2018/11/09 18:10:33 by mpetruno         ###   ########.fr       */
+/*   Created: 2018/11/09 11:13:12 by mpetruno          #+#    #+#             */
+/*   Updated: 2018/11/09 11:13:14 by mpetruno         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_ls.h"
-
-void	free_path(void *content, size_t size)
+int	ft_numlen(long n)
 {
-	t_path	*tmp;
+	int	size;
 
-	(void)size;
-	tmp = (t_path *)content;
-	free((void *)(tmp->name));
-	free((void *)(tmp->path));
-	free((void *)(tmp->pstat));
-	free(content);
-}
-
-void	free_arr(t_out **arr)
-{
-	t_out	**tmp;
-
-	tmp = arr;
-	while (*tmp)
+	size = (n <= 0) ? 1 : 0;
+	while (n != 0)
 	{
-		free((void *)(*tmp));
-		*tmp = 0;
-		tmp++;
+		size++;
+		n /= 10;
 	}
-	free((void *)arr);
+	return (size);
 }

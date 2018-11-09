@@ -6,7 +6,7 @@
 /*   By: mpetruno <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/31 21:12:58 by mpetruno          #+#    #+#             */
-/*   Updated: 2018/11/07 17:19:48 by mpetruno         ###   ########.fr       */
+/*   Updated: 2018/11/09 21:15:45 by mpetruno         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,10 +20,15 @@
 # include <sys/types.h>
 # include <sys/stat.h>
 # include <sys/ioctl.h>
+# include <pwd.h>
+# include <grp.h>
+# include <uuid/uuid.h>
+# include <time.h>
 
 # define PROGRAM_NAME "ft_ls"
-# define FLAGS	"alrRtdfimL1"
+# define FLAGS	"alrRtdfimL1xC"
 
+/* flags passed to the program */
 // REPLACE bit offset with numbers
 # define F_A	1U << 0 
 # define F_L	1U << 1
@@ -35,7 +40,9 @@
 # define F_I	1U << 7
 # define F_M	1U << 8
 # define F_LL	1U << 9
-# define F_ONE	1U << 10
+# define F_1	1U << 10
+# define F_X	1U << 11
+# define F_CC	1U << 12
 
 # define ISFLAG_A(X) (F_A & X)
 # define ISFLAG_L(X) (F_L & X)
@@ -47,7 +54,9 @@
 # define ISFLAG_I(X) (F_I & X)
 # define ISFLAG_M(X) (F_M & X)
 # define ISFLAG_LL(X) (F_LL & X)
-# define ISFLAG_1(X) (F_ONE & X)
+# define ISFLAG_1(X) (F_1 & X)
+# define ISFLAG_X(X) (F_X & X)
+# define ISFLAG_CC(X) (F_CC & X)
 
 # define ISFIFO(X) ((S_IFMT & X) == S_IFIFO)
 # define ISCHR(X) ((S_IFMT & X) == S_IFCHR)
@@ -57,7 +66,18 @@
 # define ISLNK(X) ((S_IFMT & X) == S_IFLNK)
 # define ISSOCK(X) ((S_IFMT & X) == S_IFSOCK)
 # define ISWHT(X) ((S_IFMT & X) == S_IFWHT)
-# define VP(X) ((t_path *)(X))
+
+# define VP(X) ((t_path *)(X))	/* convert (void *) to (t_path *) */
+
+# define COL_OFFSET	2	/* minimum number of spaces between output columns */
+# define STDIN	0
+# define STDOUT 1
+# define STDERR 2
+
+# define PERM_R 'r'
+# define PERM_W 'w'
+# define PERM_X 'x'
+# define PERM_N '-'
 
 extern unsigned long int	g_flags;
 
@@ -69,7 +89,28 @@ typedef struct	s_path
 	struct stat	*pstat;
 }				t_path;
 
+typedef struct	s_out
+{
+	t_path		*path;
+	short		name_len;	/* minimum length of string for name */
+	short		ino_len;	/* minimum number of digits for inode */
+}				t_out;
+
+// fill this structure with data and use for formatting strin
+typedef struct	s_dout
+{
+	long		total;		/* number of blocks */
+	short		ino_len;	/* minimum number of digits for inode */
+	short		lnk_len;	/* minimum num. of digits in num. of links */
+	short		own_len;	/* etc.. */
+	short		grp_len;
+	short		size_len;
+	short		date_len;
+	short		time_len;
+}				t_dout;
+
 void	free_path(void *content, size_t size);
+void	free_arr(t_out **arr);
 
 void	iter_dirs(t_list *dirs, int print_dir_name);
 void	process_input(t_list *files, t_list *dirs);
@@ -81,8 +122,11 @@ void    perror_report(const char *s);
 void	error_option(char c);
 
 int		sort(void *a, void *b);
+t_out	**list_to_arr(t_list *lst, int *max_ino, int *max_name);
 
 void	get_path(char *name, t_path *buff);
 void	print_paths(t_list *lst, int printdirname);
+void	print_table(t_list *lst);
+void	print_tablex(t_list *lst);
 
 #endif

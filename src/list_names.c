@@ -6,13 +6,13 @@
 /*   By: mpetruno <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/31 20:55:01 by mpetruno          #+#    #+#             */
-/*   Updated: 2018/11/07 16:58:10 by mpetruno         ###   ########.fr       */
+/*   Updated: 2018/11/09 18:13:22 by mpetruno         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
 
-static char	*add_parent(const char *name, const char *parent)
+static char		*add_parent(const char *name, const char *parent)
 {
 	char	*dir;
 	char	*res;
@@ -70,10 +70,9 @@ static t_list	*pathtolist(char *name, char *npath, int ino, t_list **names)
 	{
 		if ((path->pstat = (struct stat *)malloc(sizeof(struct stat))) == 0)
 			perror_exit("");
-// stat or lstat?
 		if (ISFLAG_LL(g_flags) ? stat(path->path, path->pstat) == -1 :
 			lstat(path->path, path->pstat) == -1)
-			perror_report(name); // or npath
+			perror_report(name);
 	}
 	elem->content = (void *)path;
 	elem->content_size = sizeof(*path);
@@ -85,7 +84,7 @@ static t_list	*pathtolist(char *name, char *npath, int ino, t_list **names)
 	return (0);
 }
 
-void	list_dir(t_list *lst)
+void			list_dir(t_list *lst)
 {
 	DIR				*dstr;
 	struct dirent	*dirp;
@@ -116,8 +115,8 @@ void	list_dir(t_list *lst)
 	closedir(dstr);
 	list_files(names);
 	ft_lstdel(&names, &free_path);
-if (subdirs)
-ft_printf("\n");
+	if (subdirs)
+		ft_printf("\n");
 	iter_dirs(subdirs, 1);
 	ft_lstdel(&subdirs, &free_path);
 }

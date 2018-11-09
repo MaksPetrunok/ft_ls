@@ -6,7 +6,7 @@
 #    By: mpetruno <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/05/25 18:27:37 by mpetruno          #+#    #+#              #
-#    Updated: 2018/11/07 10:19:23 by mpetruno         ###   ########.fr        #
+#    Updated: 2018/11/09 15:43:40 by mpetruno         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -27,6 +27,7 @@ SRC_LIST = main.c \
 		   list_initial.c \
 		   list_names.c \
 		   list_files.c \
+		   print_table.c \
 		   err.c \
 		   free.c \
 		   sort.c
