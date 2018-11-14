@@ -56,29 +56,27 @@ static t_list	*tlstdup(t_list *elem)
 static t_list	*pathtolist(char *name, char *npath, int ino, t_list **names)
 {
 	t_list		*elem;
-	t_path		*path;
+	t_path		path;
 
-	elem = malloc(sizeof(t_list));
-	path = malloc(sizeof(t_path));
-	if (!(path && elem))
-		perror_exit("");
-	path->name = ft_strdup(name);
-	path->path = npath;
-	path->ino = ino;
-	path->pstat = 0;
-	if (ISFLAG_RR(g_flags) || ISFLAG_L(g_flags) || ISFLAG_T(g_flags))
+	path.name = ft_strdup(name);
+	path.path = npath;
+	path.ino = ino;
+	path.pstat = 0;
+	if (IS_STAT_REQ(g_flags))
 	{
-		if ((path->pstat = (struct stat *)malloc(sizeof(struct stat))) == 0)
+		if ((path.pstat = (struct stat *)malloc(sizeof(struct stat))) == 0)
 			perror_exit("");
-		if (ISFLAG_LL(g_flags) ? stat(path->path, path->pstat) == -1 :
-			lstat(path->path, path->pstat) == -1)
+		if (ISFLAG_LL(g_flags) ? stat(path.path, path.pstat) == -1 :
+			lstat(path.path, path.pstat) == -1)
+		{
+			path.ino = 0;
 			perror_report(name);
+		}
 	}
-	elem->content = (void *)path;
-	elem->content_size = sizeof(*path);
-	elem->next = 0;
+	if ((elem = ft_lstnew((void *)&path, sizeof(t_path))) == 0)
+		perror_exit("");
 	ft_lstins(names, elem, &sort);
-	if (ISFLAG_RR(g_flags) && ISDIR(path->pstat->st_mode) &&
+	if (ISFLAG_RR(g_flags) && ISDIR(path.pstat->st_mode) &&
 		ft_strcmp("..", name) != 0 && ft_strcmp(".", name) != 0)
 		return (tlstdup(elem));
 	return (0);
@@ -109,14 +107,14 @@ void			list_dir(t_list *lst)
 		add_parent(dirp->d_name, VP(lst->content)->path), dirp->d_ino, &names);
 		if (ISFLAG_RR(g_flags) && tmp)
 			ft_lstins(&subdirs, tmp, &sort);
+		errno = 0;
 	}
 	if (errno != 0 && dirp == 0)
 		perror_report(VP(lst->content)->name);
 	closedir(dstr);
 	list_files(names);
 	ft_lstdel(&names, &free_path);
-	if (subdirs)
-		ft_printf("\n");
+	write (1, "\n", subdirs != 0);
 	iter_dirs(subdirs, 1);
 	ft_lstdel(&subdirs, &free_path);
 }

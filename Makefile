@@ -30,6 +30,9 @@ SRC_LIST = main.c \
 		   print_table.c \
 		   err.c \
 		   free.c \
+		   fmt.c \
+		   get_det.c \
+		   print_det_lst.c \
 		   sort.c
 
 OBJ_LIST = $(addprefix $(OBJ_DIR), $(SRC_LIST:.c=.o))

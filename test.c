@@ -1,9 +1,9 @@
-#include <sys/stat.h>
+#include <stdio.h>
 
 int main (int ac, char **av)
 
 {
-	S_IFDIR(0);
+	printf("%.0d - number 42\n", 42);
 	return (0);
 
 

@@ -64,7 +64,7 @@ static int	pathtolist(char *name, t_list **files, t_list **dirs)
 	path = malloc(sizeof(t_path));
 	if (!buff || !path || !elem)
 		perror_exit("");
-	if (ISFLAG_LL(g_flags) ? stat(name, buff) == -1 : lstat(name, buff) == -1)
+	if ((ISFLAG_LL(g_flags) ? stat(name, buff) : lstat(name, buff)) == -1)
 	{
 		perror_report(name);
 		return (1);
@@ -76,10 +76,8 @@ static int	pathtolist(char *name, t_list **files, t_list **dirs)
 	elem->content = (void *)path;
 	elem->content_size = sizeof(*path);
 	elem->next = 0;
-	if (ISDIR(buff->st_mode))
-		ft_lstins(dirs, elem, &sort);
-	else
-		ft_lstins(files, elem, &sort);
+	ft_lstins((ISDIR(buff->st_mode) && !ISFLAG_D(g_flags)) ?
+		dirs : files, elem, &sort);
 	return (1);
 }
 
