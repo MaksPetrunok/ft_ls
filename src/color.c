@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   list_files.c                                       :+:      :+:    :+:   */
+/*   color.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mpetruno <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -12,32 +12,22 @@
 
 #include "ft_ls.h"
 
-static void	print_comma_separated(t_list *lst)
+void	set_color(mode_t mode)
 {
-	while (lst)
-	{
-		if (ISFLAG_GG(g_flags))
-			set_color(VP(lst->content)->pstat->st_mode);
-		if (ISFLAG_I(g_flags))
-			ft_printf("%d ", VP(lst->content)->ino);
-		ft_printf("%s", VP(lst->content)->name);
-		if (ISFLAG_GG(g_flags))
-			set_color(0);
-		if (lst->next)
-			ft_putstr(", ");
-		lst = lst->next;
-	}
-	write(1, "\n", 1);
-}
-
-void		list_files(t_list *lst)
-{
-	if (lst == 0)
-		return ;
-	if (ISFLAG_L(g_flags) || ISFLAG_G(g_flags))
-		print_det_lst(lst);
-	else if (ISFLAG_M(g_flags))
-		print_comma_separated(lst);
+	if (mode == 0)
+		ft_putstr(RESET);
+	else if (ISDIR(mode))
+		ft_putstr(BLUE_BD);
+	else if (ISLNK(mode))
+		ft_putstr(GREEN);
+	else if (ISREG(mode))
+		ft_putstr(DEFAULT);
+	else if (ISCHR(mode))
+		ft_putstr(YELLOW);
+	else if (ISBLK(mode))
+		ft_putstr(MAGENTA);
+	else if (ISSOCK(mode))
+		ft_putstr(CYAN);
 	else
-		print_table(lst);
+		ft_putstr(RED);
 }

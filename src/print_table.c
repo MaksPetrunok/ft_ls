@@ -66,10 +66,14 @@ static void	print_array_v(t_out **arr, int col, int ino_w, int name_w)
 		ind = i;
 		while (ind < size)
 		{
+			if (ISFLAG_GG(g_flags))
+				set_color(arr[ind]->path->pstat->st_mode);
 			if (ISFLAG_I(g_flags))
 				ft_printf("%*d ", ino_w, arr[ind]->path->ino);
 			ft_printf("%-*s",
 				(ind + col_len >= size) ? 1 : name_w, arr[ind]->path->name);
+			if (ISFLAG_GG(g_flags))
+				set_color(0);
 			ind += col_len;
 		}
 		ft_printf("\n");
@@ -83,12 +87,16 @@ static void	print_array_h(t_out **arr, int col, int ino_w, int name_w)
 	i = -1;
 	while (arr[++i])
 	{
+		if (ISFLAG_GG(g_flags))
+			set_color(arr[i]->path->pstat->st_mode);
 		if (ISFLAG_I(g_flags))
 			ft_printf("%*d ", ino_w, arr[i]->path->ino);
 		if ((i + 1) % col == 0 || arr[i + 1] == 0)
 			ft_printf("%-*s\n", 1, arr[i]->path->name);
 		else
 			ft_printf("%-*s", name_w, arr[i]->path->name);
+		if (ISFLAG_GG(g_flags))
+			set_color(0);
 	}
 }
 

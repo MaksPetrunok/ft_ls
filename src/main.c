@@ -73,6 +73,7 @@ static int	pathtolist(char *name, t_list **files, t_list **dirs)
 	path->path = ft_strcmp("/", name) ? ft_strdup(name) : ft_strnew(0);
 	path->ino = buff->st_ino;
 	path->pstat = buff;
+	path->xat_acl = 0;
 	elem->content = (void *)path;
 	elem->content_size = sizeof(*path);
 	elem->next = 0;

@@ -26,6 +26,8 @@ char	get_type(mode_t mode)
 		return ('b');
 	else if (ISFIFO(mode))
 		return ('p');
+	else if (ISSOCK(mode))
+		return ('s');
 	return ('?');
 }
 
@@ -45,10 +47,12 @@ char	*get_group(gid_t gid)
 	return (tmp->gr_name);
 }
 
-void	get_acc(char *buff, mode_t mode)
+void	get_acc(char *buff, t_path *path)
 {
+	mode_t	mode;
 	short	i;
 
+	mode = path->pstat->st_mode;
 	i = 8;
 	*buff++ = (mode & (1 << i--)) ? PERM_R : PERM_N;
 	*buff++ = (mode & (1 << i--)) ? PERM_W : PERM_N;
@@ -59,5 +63,9 @@ void	get_acc(char *buff, mode_t mode)
 	*buff++ = (mode & (1 << i--)) ? PERM_R : PERM_N;
 	*buff++ = (mode & (1 << i--)) ? PERM_W : PERM_N;
 	*buff++ = (mode & (1 << i--)) ? PERM_X : PERM_N;
+	if (path->xat_acl & 1)
+		*buff++ = '@';
+	if (path->xat_acl & 2)
+		*buff++ = '+';
 	*buff = '\0';
 }

@@ -10,12 +10,15 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#define ON_LINUX
+
 #ifndef FT_LS_H
 # define FT_LS_H
 
 # include "libft.h"
-# include "unistd.h"
+# include "colors.h"
 
+# include <sys/xattr.h> // added for xattr
 # include <stdio.h>
 # include <errno.h>
 # include <dirent.h>
@@ -29,7 +32,7 @@
 
 # define PROGRAM_NAME "ft_ls"
 //# define FLAGS	"alrRtdfimL1xCugS"
-# define FLAGS		"ftuSRLlgmxC1ardi"
+# define FLAGS		"ftuSRLlgmxC1ardiG"
 
 /* Flags passed to the program. Single character represents small letter,
  * double characters represent capital letter (r -> R, R -> RR). */
@@ -49,26 +52,10 @@
 # define F_R	0x2000
 # define F_D	0x4000
 # define F_I	0x8000
+# define F_GG	0x10000
 
-# define F_ST	0x00FE
-/*
-# define F_A	1U << 0 
-# define F_L	1U << 1
-# define F_R	1U << 2
-# define F_RR	1U << 3
-# define F_T	1U << 4
-# define F_D	1U << 5
-# define F_F	1U << 6
-# define F_I	1U << 7
-# define F_M	1U << 8
-# define F_LL	1U << 9
-# define F_1	1U << 10
-# define F_X	1U << 11
-# define F_CC	1U << 12
-# define F_U	1U << 13
-# define F_G	1U << 14
-# define F_SS	1U << 15
-*/
+# define F_ST	0x100FE
+
 # define ISFLAG_A(X) (F_A & X)
 # define ISFLAG_L(X) (F_L & X)
 # define ISFLAG_R(X) (F_R & X)
@@ -85,6 +72,7 @@
 # define ISFLAG_U(X) (F_U & X)
 # define ISFLAG_G(X) (F_G & X)
 # define ISFLAG_SS(X) (F_SS & X)
+# define ISFLAG_GG(X) (F_GG & X)
 # define IS_STAT_REQ(X) (F_ST & X)
 
 # define ISFIFO(X) ((S_IFMT & X) == S_IFIFO)
@@ -117,6 +105,7 @@ typedef struct	s_path
 	const char	*path;
 	int			ino;
 	struct stat	*pstat;
+	short		xat_acl;
 }				t_path;
 
 typedef struct	s_out
@@ -137,12 +126,15 @@ typedef struct	s_dout
 	short		size_len;
 	short		date_len;
 	short		time_len;
+	short		xat_acl;
 }				t_dout;
+
+void	set_color(mode_t mode);
 
 char	get_type(mode_t mode);
 char	*get_owner(uid_t uid);
 char	*get_group(gid_t gid);
-void	get_acc(char *buff, mode_t mode);
+void	get_acc(char *buff, t_path *path);
 
 void	init_fmt(t_dout *fmt);
 void	fill_fmt(t_dout *fmt, t_list *lst);

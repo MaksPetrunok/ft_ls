@@ -47,6 +47,7 @@ static t_list	*tlstdup(t_list *elem)
 	path->path = ft_strdup(VP(elem->content)->path);
 	path->ino = VP(elem->content)->ino;
 	path->pstat = buff;
+	path->xat_acl = 0;
 	lst->content = (void *)path;
 	lst->next = 0;
 	lst->content_size = elem->content_size;
@@ -62,6 +63,7 @@ static t_list	*pathtolist(char *name, char *npath, int ino, t_list **names)
 	path.path = npath;
 	path.ino = ino;
 	path.pstat = 0;
+	path.xat_acl = 0;
 	if (IS_STAT_REQ(g_flags))
 	{
 		if ((path.pstat = (struct stat *)malloc(sizeof(struct stat))) == 0)

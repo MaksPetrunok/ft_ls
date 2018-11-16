@@ -12,8 +12,6 @@
 
 #include "ft_ls.h"
 
-#define ON_LINUX
-
 // clarify priority of -t, -f, etc.. or no flag
 static int	sort_atime(void *a, void *b)
 {
