@@ -6,11 +6,11 @@
 /*   By: mpetruno <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/31 21:12:58 by mpetruno          #+#    #+#             */
-/*   Updated: 2018/11/09 21:15:45 by mpetruno         ###   ########.fr       */
+/*   Updated: 2018/11/20 21:40:11 by mpetruno         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#define ON_LINUX
+//#define ON_LINUX
 
 #ifndef FT_LS_H
 # define FT_LS_H
@@ -29,6 +29,7 @@
 # include <grp.h>
 # include <uuid/uuid.h>
 # include <time.h>
+# include <sys/acl.h>
 
 # define PROGRAM_NAME "ft_ls"
 //# define FLAGS	"alrRtdfimL1xCugS"
@@ -105,7 +106,7 @@ typedef struct	s_path
 	const char	*path;
 	int			ino;
 	struct stat	*pstat;
-	short		xat_acl;
+	char		xat_acl;
 }				t_path;
 
 typedef struct	s_out
@@ -144,8 +145,8 @@ void	free_path(void *content, size_t size);
 void	free_arr(t_out **arr);
 
 void	iter_dirs(t_list *dirs, int print_dir_name);
-void	process_input(t_list *files, t_list *dirs);
-void	list_files(t_list *lst);
+void	process_input(t_list *files, t_list *dirs, int print_dir);
+void	list_files(t_list *lst, int total);
 void	list_dir(t_list *lst);
 
 void    perror_exit(const char *s);
@@ -159,6 +160,6 @@ void	get_path(char *name, t_path *buff);
 void	print_paths(t_list *lst, int printdirname);
 void	print_table(t_list *lst);
 void	print_tablex(t_list *lst);
-void	print_det_lst(t_list *lst);
+void	print_det_lst(t_list *lst, int total);
 
 #endif

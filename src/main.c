@@ -6,7 +6,7 @@
 /*   By: mpetruno <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/31 20:55:01 by mpetruno          #+#    #+#             */
-/*   Updated: 2018/11/09 21:03:53 by mpetruno         ###   ########.fr       */
+/*   Updated: 2018/11/20 21:39:43 by mpetruno         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ static void	set_flag(long f)
 // TEST HOW -l1xCm flags are parsed before release
 }
 
-static int	parse_flags(char *s)
+static int	parse_flags(char *s, int *f)
 {
 	char	*ref;
 	char	*p;
@@ -39,8 +39,11 @@ static int	parse_flags(char *s)
 	tmp = s + 1;
 	if (*tmp == '\0')
 		return (0);
-	if (*tmp == '-')
-		tmp++;
+	if (*tmp == '-' && *(tmp + 1) == '\0')
+	{
+		*f = 0;
+		return (1);
+	}
 	ref = FLAGS;
 	while (*tmp)
 	{
@@ -88,14 +91,16 @@ int			main(int ac, char **av)
 	t_list	*dirlst;
 	int		parsed_path;
 	int		i;
+	int		on_flags;
 
 	g_flags = 0;
 	filelst = 0;
 	dirlst = 0;
 	parsed_path = 0;
+	on_flags = 1;
 	i = 1;
-	while (i < ac)
-		if (av[i][0] == '-' && parse_flags(av[i]))
+	while (i < ac && on_flags)
+		if (av[i][0] == '-' && parse_flags(av[i], &on_flags))
 			i++;
 		else
 			break ;
@@ -103,7 +108,7 @@ int			main(int ac, char **av)
 		parsed_path += pathtolist(av[i++], &filelst, &dirlst);
 	if (!parsed_path)
 		pathtolist(".", &filelst, &dirlst);
-	process_input(filelst, dirlst);
+	process_input(filelst, dirlst, parsed_path);
 //system("leaks ft_ls");
 	return (0);
 }

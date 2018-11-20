@@ -6,7 +6,7 @@
 /*   By: mpetruno <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/05 20:52:09 by mpetruno          #+#    #+#             */
-/*   Updated: 2018/11/09 21:32:09 by mpetruno         ###   ########.fr       */
+/*   Updated: 2018/11/20 21:02:28 by mpetruno         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,9 @@ static void print_name(t_path *path, char *buff)
 		ft_putstr(" -> ");
 		if (errno == ENOENT && ISFLAG_GG(g_flags))
 			set_color(1);
-		ft_putstr(buff);		
-		set_color(0);
+		ft_putstr(buff);
+		if (ISFLAG_GG(g_flags))
+			set_color(0);
 		write(1, "\n", 1);
 	}
 	else
@@ -58,36 +59,63 @@ static void	print_missing_lnk(t_dout *fmt)
 			12, '?');
 }
 
+static char	*get_time(struct stat *st, char *buff)
+{
+	time_t	now;
+	time_t	diff;
+	char	*tmp;
+	time_t	half_year;
+
+	half_year = 15778463;
+	tmp = ctime(&(st->st_mtimespec.tv_sec)) + 4;
+	diff = time(&now) - st->st_mtimespec.tv_sec;
+	if (diff > half_year || diff < -half_year)
+	{
+		ft_strncpy(buff, tmp, 6);
+		buff[6] = ' ';
+		buff[7] = ' ';
+		tmp += 15;
+		while (*tmp == ' ')
+			tmp++;
+		ft_strncpy(buff + 8, tmp, ft_strlen(tmp) - 1);
+	}
+	else
+	{
+		ft_strncpy(buff, tmp, 12);
+		buff[12] = 0;
+	}
+	return (buff);
+}
+
 static void	print_details(struct stat *st, char *acc, t_dout *fmt)
 {
 	char	buff[20];
-
+	char	t[30];
+	
 	if (ISFLAG_I(g_flags))
 		ft_printf("%*d ", fmt->ino_len, st->st_ino);
 	if (ISFLAG_G(g_flags))
-		ft_printf("%c%*-s%*d %*-s %*s %.*s ",
+		ft_printf("%c%*-s%*d %*-s %*s %s ",
 			get_type(st->st_mode),
 			(9 + fmt->xat_acl), acc,
 			fmt->lnk_len, st->st_nlink,
 			fmt->grp_len, get_group(st->st_gid),
-			//fmt->size_len, st->st_size, // for device files print {major, minor} numbers (st_dev)
 			fmt->size_len, get_size(st, buff),
-//ft_strlen(ctime(&(st->st_mtimespec.tv_sec)))-1, ctime(&(st->st_mtimespec.tv_sec)),
-			12, ctime(&(st->st_mtim.tv_sec)) + 4);
+			get_time(st, t));
+//			12, ctime(&(st->st_mtim.tv_sec)) + 4);
 	else
-		ft_printf("%c%*-s%*d %*-s %*-s %*s %.*s ",
+		ft_printf("%c%*-s%*d %*-s %*-s %*s %s ",
 			get_type(st->st_mode),
-			(9 + fmt->xat_acl), acc,
+			11, acc,
 			fmt->lnk_len, st->st_nlink,
 			fmt->own_len, get_owner(st->st_uid),
 			fmt->grp_len, get_group(st->st_gid),
-//			fmt->size_len, st->st_size,
 			fmt->size_len, get_size(st, buff),
-//ft_strlen(ctime(&(st->st_mtimespec.tv_sec)))-1, ctime(&(st->st_mtimespec.tv_sec)),
-			12, ctime(&(st->st_mtim.tv_sec)) + 4);
+			get_time(st, t));
+//			12, ctime(&(st->st_mtim.tv_sec)) + 4);
 }
 
-void		print_det_lst(t_list *lst)
+void		print_det_lst(t_list *lst, int total)
 {
 	t_dout		fmt;
 	struct stat	*st;
@@ -95,8 +123,8 @@ void		print_det_lst(t_list *lst)
 	char		buff[PATH_BUFF_SIZE];
 
 	fill_fmt(&fmt, lst);
-//ft_printf("xattr_acc=%d\n", fmt.xat_acl);
-	ft_printf("total: %ld\n", fmt.total);
+	if (total)
+		ft_printf("total %ld\n", fmt.total);
 	while (lst)
 	{
 		if (ISFLAG_LL(g_flags) && VP(lst->content)->ino == 0)

@@ -6,7 +6,7 @@
 /*   By: mpetruno <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/05 20:52:09 by mpetruno          #+#    #+#             */
-/*   Updated: 2018/11/09 21:32:09 by mpetruno         ###   ########.fr       */
+/*   Updated: 2018/11/20 18:58:44 by mpetruno         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,9 +63,7 @@ void	get_acc(char *buff, t_path *path)
 	*buff++ = (mode & (1 << i--)) ? PERM_R : PERM_N;
 	*buff++ = (mode & (1 << i--)) ? PERM_W : PERM_N;
 	*buff++ = (mode & (1 << i--)) ? PERM_X : PERM_N;
-	if (path->xat_acl & 1)
-		*buff++ = '@';
-	if (path->xat_acl & 2)
-		*buff++ = '+';
+	*buff++ = path->xat_acl;
+	*buff++ = ' ';
 	*buff = '\0';
 }

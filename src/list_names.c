@@ -6,7 +6,7 @@
 /*   By: mpetruno <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/31 20:55:01 by mpetruno          #+#    #+#             */
-/*   Updated: 2018/11/09 18:13:22 by mpetruno         ###   ########.fr       */
+/*   Updated: 2018/11/20 21:00:20 by mpetruno         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,7 +114,7 @@ void			list_dir(t_list *lst)
 	if (errno != 0 && dirp == 0)
 		perror_report(VP(lst->content)->name);
 	closedir(dstr);
-	list_files(names);
+	list_files(names, 1);
 	ft_lstdel(&names, &free_path);
 	write (1, "\n", subdirs != 0);
 	iter_dirs(subdirs, 1);

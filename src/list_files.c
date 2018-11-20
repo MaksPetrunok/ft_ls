@@ -6,7 +6,7 @@
 /*   By: mpetruno <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/05 20:52:09 by mpetruno          #+#    #+#             */
-/*   Updated: 2018/11/09 21:32:09 by mpetruno         ###   ########.fr       */
+/*   Updated: 2018/11/20 20:57:34 by mpetruno         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,12 +30,12 @@ static void	print_comma_separated(t_list *lst)
 	write(1, "\n", 1);
 }
 
-void		list_files(t_list *lst)
+void		list_files(t_list *lst, int total)
 {
 	if (lst == 0)
 		return ;
 	if (ISFLAG_L(g_flags) || ISFLAG_G(g_flags))
-		print_det_lst(lst);
+		print_det_lst(lst, total);
 	else if (ISFLAG_M(g_flags))
 		print_comma_separated(lst);
 	else

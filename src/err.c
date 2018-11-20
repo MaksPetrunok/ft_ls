@@ -6,7 +6,7 @@
 /*   By: mpetruno <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/01 16:13:58 by mpetruno          #+#    #+#             */
-/*   Updated: 2018/11/09 18:09:18 by mpetruno         ###   ########.fr       */
+/*   Updated: 2018/11/20 21:58:14 by mpetruno         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	perror_report(const char *str)
 	char	*s;
 	char	*msg;
 
-	if (*str)
+	if (str)
 		s = ft_strjoin(PROGRAM_NAME, ": ");
 	else
 		s = ft_strnew(0);

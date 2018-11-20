@@ -6,7 +6,7 @@
 /*   By: mpetruno <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/05 20:52:09 by mpetruno          #+#    #+#             */
-/*   Updated: 2018/11/09 21:32:09 by mpetruno         ###   ########.fr       */
+/*   Updated: 2018/11/20 19:01:25 by mpetruno         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,13 +28,13 @@ void	init_fmt(t_dout *fmt)
 char	*get_size(struct stat *st, char *buff)
 {
 	char	*ptr;
-	if (ISCHR(st->st_mode) || ISBLK(st->st_mode)) // || ISSOCK(st->st_mode))
+	if (ISCHR(st->st_mode) || ISBLK(st->st_mode))
 	{
-		ft_ulltoa_base(st->st_rdev >> 8 & 0xFF, 10, 0, buff);
+		ft_ulltoa_base(st->st_rdev >> 24 & 0xFFF, 10, 0, buff);
 		ptr = buff + ft_strlen(buff);
 		*ptr++ = ',';
 		*ptr++ = ' ';
-		ft_ulltoa_base(st->st_rdev & 0xFF, 10, 0, ptr);
+		ft_ulltoa_base(st->st_rdev & 0xFFFFF, 10, 0, ptr);
 	}
 	else
 		ft_ulltoa_base(st->st_size, 10, 0, buff);
@@ -45,33 +45,49 @@ int		get_sizelen(struct stat *st)
 {
 	int	len;
 
-	if (ISCHR(st->st_mode) || ISBLK(st->st_mode)) // || ISSOCK(st->st_mode))
-		len = ft_numlen(st->st_rdev & 0xFF) +
-				ft_numlen((st->st_rdev >> 8) & 0xFF) + 2;
+	if (ISCHR(st->st_mode) || ISBLK(st->st_mode))
+		len = ft_numlen(st->st_rdev & 0xFFFFF) +
+				ft_numlen((st->st_rdev >> 24) & 0xFFF) + 2;
 	else
 		len = ft_numlen(st->st_size);
 	return (len);
 }
 
-static short    has_xattr(t_path *path)
+static void    set_xattr_acl(t_path *path)
 {
-	int	res;
+	acl_t		acl;
+	acl_entry_t	acl_ent;
+	ssize_t		xattr;
 
 	if (path->ino == 0)
-		return (0);
-// IS LINUX?
+	{
+		path->xat_acl = ' ';
+		return ;
+	}
+#ifndef ON_LINUX
+	acl = acl_get_link_np(path->path, ACL_TYPE_EXTENDED);
+	if (acl && acl_get_entry(acl, ACL_FIRST_ENTRY, &acl_ent) == -1)
+	{
+		acl_free(acl);
+		acl = 0;
+	}
+#endif
+
 #ifdef ON_LINUX
-	if ((res = ISFLAG_LL(g_flags) ?
+	if ((xattr = ISFLAG_LL(g_flags) ?
 		listxattr(path->path, 0, 0) : llistxattr(path->path, 0, 0)) < 0)
 #else
-	if ((res = listxattr(path->path, 0, 0, ISFLAG_LL(g_flags))) < 0)
+	if ((xattr = listxattr(path->path, 0, 0, XATTR_NOFOLLOW)) < 0)
+//					ISFLAG_LL(g_flags))) < 0)
 #endif
-	{
-		perror_report(path->path);
-		return (0);
-	}
-	path->xat_acl = (res > 0);
-	return (res > 0);
+		xattr = 0;
+	if (xattr > 0)
+		path->xat_acl = '@';
+	else if (acl != 0)
+		path->xat_acl = '+';
+	else
+		path->xat_acl = ' ';
+	acl_free(acl);
 }
 
 void	fill_fmt(t_dout *fmt, t_list *lst)
@@ -91,14 +107,13 @@ void	fill_fmt(t_dout *fmt, t_list *lst)
 		}
 		tmp = ft_numlen(st->st_nlink);
 		fmt->lnk_len = (tmp > fmt->lnk_len) ? tmp : fmt->lnk_len;
-		tmp = ft_strlen(get_owner(st->st_uid));
+		tmp = ft_strlen(get_owner(st->st_uid)) + 1;
 		fmt->own_len = (tmp > fmt->own_len) ? tmp : fmt->own_len;
-		tmp = ft_strlen(get_group(st->st_gid));
+		tmp = ft_strlen(get_group(st->st_gid)) + 1;
 		fmt->grp_len = (tmp > fmt->grp_len) ? tmp : fmt->grp_len;
 		tmp = get_sizelen(st); //ft_numlen(get_size(st));
 		fmt->size_len = (tmp > fmt->size_len) ? tmp : fmt->size_len;
-		fmt->xat_acl |= (has_xattr(VP(lst->content))); // and here get_acl()
+		set_xattr_acl(VP(lst->content));
 		lst = lst->next;
 	}
-	fmt->xat_acl = (fmt->xat_acl >= 2) ? fmt->xat_acl : fmt->xat_acl + 1;
 }
