@@ -132,6 +132,7 @@ typedef struct	s_dout
 void	set_color(mode_t mode);
 
 char	get_type(mode_t mode);
+char	*get_size(struct stat *st, char *buff);
 char	*get_owner(uid_t uid);
 char	*get_group(gid_t gid);
 void	get_acc(char *buff, t_path *path);

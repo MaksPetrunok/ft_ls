@@ -60,25 +60,29 @@ static void	print_missing_lnk(t_dout *fmt)
 
 static void	print_details(struct stat *st, char *acc, t_dout *fmt)
 {
+	char	buff[20];
+
 	if (ISFLAG_I(g_flags))
 		ft_printf("%*d ", fmt->ino_len, st->st_ino);
 	if (ISFLAG_G(g_flags))
-		ft_printf("%c%*-s%*d %*-s %*d %.*s ",
+		ft_printf("%c%*-s%*d %*-s %*s %.*s ",
 			get_type(st->st_mode),
 			(9 + fmt->xat_acl), acc,
 			fmt->lnk_len, st->st_nlink,
 			fmt->grp_len, get_group(st->st_gid),
-			fmt->size_len, st->st_size,
+			//fmt->size_len, st->st_size, // for device files print {major, minor} numbers (st_dev)
+			fmt->size_len, get_size(st, buff),
 //ft_strlen(ctime(&(st->st_mtimespec.tv_sec)))-1, ctime(&(st->st_mtimespec.tv_sec)),
 			12, ctime(&(st->st_mtim.tv_sec)) + 4);
 	else
-		ft_printf("%c%*-s%*d %*-s %*-s %*d %.*s ",
+		ft_printf("%c%*-s%*d %*-s %*-s %*s %.*s ",
 			get_type(st->st_mode),
 			(9 + fmt->xat_acl), acc,
 			fmt->lnk_len, st->st_nlink,
 			fmt->own_len, get_owner(st->st_uid),
 			fmt->grp_len, get_group(st->st_gid),
-			fmt->size_len, st->st_size,
+//			fmt->size_len, st->st_size,
+			fmt->size_len, get_size(st, buff),
 //ft_strlen(ctime(&(st->st_mtimespec.tv_sec)))-1, ctime(&(st->st_mtimespec.tv_sec)),
 			12, ctime(&(st->st_mtim.tv_sec)) + 4);
 }

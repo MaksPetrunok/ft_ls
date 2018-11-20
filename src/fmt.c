@@ -25,6 +25,34 @@ void	init_fmt(t_dout *fmt)
 	fmt->xat_acl = 0;
 }
 
+char	*get_size(struct stat *st, char *buff)
+{
+	char	*ptr;
+	if (ISCHR(st->st_mode) || ISBLK(st->st_mode)) // || ISSOCK(st->st_mode))
+	{
+		ft_ulltoa_base(st->st_rdev >> 8 & 0xFF, 10, 0, buff);
+		ptr = buff + ft_strlen(buff);
+		*ptr++ = ',';
+		*ptr++ = ' ';
+		ft_ulltoa_base(st->st_rdev & 0xFF, 10, 0, ptr);
+	}
+	else
+		ft_ulltoa_base(st->st_size, 10, 0, buff);
+	return (buff);
+}
+
+int		get_sizelen(struct stat *st)
+{
+	int	len;
+
+	if (ISCHR(st->st_mode) || ISBLK(st->st_mode)) // || ISSOCK(st->st_mode))
+		len = ft_numlen(st->st_rdev & 0xFF) +
+				ft_numlen((st->st_rdev >> 8) & 0xFF) + 2;
+	else
+		len = ft_numlen(st->st_size);
+	return (len);
+}
+
 static short    has_xattr(t_path *path)
 {
 	int	res;
@@ -67,7 +95,7 @@ void	fill_fmt(t_dout *fmt, t_list *lst)
 		fmt->own_len = (tmp > fmt->own_len) ? tmp : fmt->own_len;
 		tmp = ft_strlen(get_group(st->st_gid));
 		fmt->grp_len = (tmp > fmt->grp_len) ? tmp : fmt->grp_len;
-		tmp = ft_numlen(st->st_size);
+		tmp = get_sizelen(st); //ft_numlen(get_size(st));
 		fmt->size_len = (tmp > fmt->size_len) ? tmp : fmt->size_len;
 		fmt->xat_acl |= (has_xattr(VP(lst->content))); // and here get_acl()
 		lst = lst->next;
