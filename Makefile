@@ -6,7 +6,7 @@
 #    By: mpetruno <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/05/25 18:27:37 by mpetruno          #+#    #+#              #
-#    Updated: 2018/11/09 15:43:40 by mpetruno         ###   ########.fr        #
+#    Updated: 2018/11/21 16:26:07 by mpetruno         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -34,7 +34,8 @@ SRC_LIST = main.c \
 		   get_det.c \
 		   print_det_lst.c \
 		   sort.c \
-		   color.c
+		   color.c \
+		   aux.c
 
 OBJ_LIST = $(addprefix $(OBJ_DIR), $(SRC_LIST:.c=.o))
 

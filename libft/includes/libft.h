@@ -6,7 +6,7 @@
 /*   By: mpetruno <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/25 18:27:52 by mpetruno          #+#    #+#             */
-/*   Updated: 2018/11/09 11:08:18 by mpetruno         ###   ########.fr       */
+/*   Updated: 2018/11/21 15:04:59 by mpetruno         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,8 @@ char				*ft_strsub(char const *s, unsigned int start, size_t len);
 char				*ft_strjoin(char const *s1, char const *s2);
 char				*ft_strtrim(char const *s);
 char				**ft_strsplit(char const *s, char c);
+char				*ft_strsort(char *str);
+char				**ft_strarr_sort(char **arr, int size);
 char				*ft_itoa(int n);
 void				ft_putchar(char c);
 void				ft_putstr(char const *s);
@@ -86,7 +88,8 @@ void				ft_lstdelone(t_list **alst, void (*del)(void *, size_t));
 void				ft_lstdel(t_list **alst, void (*del)(void *, size_t));
 void				ft_lstfree(t_list **alst);
 void				ft_lstadd(t_list **alst, t_list *new);
-void				ft_lstins(t_list **alst, t_list *new, int (*sort)(void *, void*));
+void				ft_lstins(t_list **alst, t_list *new,
+						int (*sort)(void *, void*));
 void				ft_lstiter(t_list *lst, void (*f)(t_list *elem));
 int					ft_lstsize(t_list *lst);
 t_list				*ft_lstmap(t_list *lst, t_list *(*f)(t_list *elem));

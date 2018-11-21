@@ -6,14 +6,9 @@
 /*   By: mpetruno <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/03 13:27:00 by mpetruno          #+#    #+#             */
-/*   Updated: 2018/10/23 13:48:54 by mpetruno         ###   ########.fr       */
+/*   Updated: 2018/11/21 15:04:21 by mpetruno         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
-// remove these lines
-#define intmax_t __intmax_t
-#define uintmax_t __uintmax_t
-
 
 #ifndef FT_PRINTF_H
 # define FT_PRINTF_H

@@ -6,13 +6,13 @@
 /*   By: mpetruno <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/05 20:52:09 by mpetruno          #+#    #+#             */
-/*   Updated: 2018/11/20 18:58:44 by mpetruno         ###   ########.fr       */
+/*   Updated: 2018/11/21 15:34:22 by mpetruno         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
 
-char	get_type(mode_t mode)
+char		get_type(mode_t mode)
 {
 	if (ISDIR(mode))
 		return ('d');
@@ -31,7 +31,7 @@ char	get_type(mode_t mode)
 	return ('?');
 }
 
-char	*get_owner(uid_t uid)
+char		*get_owner(uid_t uid)
 {
 	struct passwd	*tmp;
 
@@ -39,7 +39,7 @@ char	*get_owner(uid_t uid)
 	return (tmp->pw_name);
 }
 
-char	*get_group(gid_t gid)
+char		*get_group(gid_t gid)
 {
 	struct group	*tmp;
 
@@ -47,7 +47,21 @@ char	*get_group(gid_t gid)
 	return (tmp->gr_name);
 }
 
-void	get_acc(char *buff, t_path *path)
+static char	get_xp(mode_t mode, char loc, char is_exec)
+{
+	if (loc & 3)
+	{
+		if (!is_exec && (mode & ((loc & 1) ? S_ISUID : S_ISGID)))
+			return ('S');
+		else if (is_exec && (mode & ((loc & 1) ? S_ISUID : S_ISGID)))
+			return ('s');
+	}
+	else if ((loc & 4) && (mode & S_ISVTX))
+		return (is_exec ? 't' : 'T');
+	return (is_exec ? 'x' : '-');
+}
+
+void		get_acc(char *buff, t_path *path)
 {
 	mode_t	mode;
 	short	i;
@@ -56,13 +70,13 @@ void	get_acc(char *buff, t_path *path)
 	i = 8;
 	*buff++ = (mode & (1 << i--)) ? PERM_R : PERM_N;
 	*buff++ = (mode & (1 << i--)) ? PERM_W : PERM_N;
-	*buff++ = (mode & (1 << i--)) ? PERM_X : PERM_N;
+	*buff++ = get_xp(mode, 1, (mode & (1 << i--)));
 	*buff++ = (mode & (1 << i--)) ? PERM_R : PERM_N;
 	*buff++ = (mode & (1 << i--)) ? PERM_W : PERM_N;
-	*buff++ = (mode & (1 << i--)) ? PERM_X : PERM_N;
+	*buff++ = get_xp(mode, 2, (mode & (1 << i--)));
 	*buff++ = (mode & (1 << i--)) ? PERM_R : PERM_N;
 	*buff++ = (mode & (1 << i--)) ? PERM_W : PERM_N;
-	*buff++ = (mode & (1 << i--)) ? PERM_X : PERM_N;
+	*buff++ = get_xp(mode, 4, (mode & (1 << i--)));
 	*buff++ = path->xat_acl;
 	*buff++ = ' ';
 	*buff = '\0';

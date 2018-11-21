@@ -6,7 +6,7 @@
 /*   By: mpetruno <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/31 20:55:01 by mpetruno          #+#    #+#             */
-/*   Updated: 2018/11/20 21:39:43 by mpetruno         ###   ########.fr       */
+/*   Updated: 2018/11/21 15:39:44 by mpetruno         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,18 +16,9 @@ unsigned long int	g_flags;
 
 static void	set_flag(long f)
 {
+	if (f & F_OUTPUT_TYPE)
+		g_flags &= ~(F_OUTPUT_TYPE);
 	g_flags |= f;
-	if (ISFLAG_L(f))
-		g_flags &= ~(F_CC | F_X | F_1 | F_M);
-	else if (ISFLAG_1(f))
-		g_flags &= ~(F_CC | F_X | F_L | F_M);
-	else if (ISFLAG_X(f))
-		g_flags &= ~(F_CC | F_1 | F_L);
-	else if (ISFLAG_CC(f))
-		g_flags &= ~(F_1 | F_X | F_L);
-	else if (ISFLAG_M(f))
-		g_flags &= ~(F_CC | F_1 | F_X | F_L);
-// TEST HOW -l1xCm flags are parsed before release
 }
 
 static int	parse_flags(char *s, int *f)
@@ -67,7 +58,7 @@ static int	pathtolist(char *name, t_list **files, t_list **dirs)
 	path = malloc(sizeof(t_path));
 	if (!buff || !path || !elem)
 		perror_exit("");
-	if ((ISFLAG_LL(g_flags) ? stat(name, buff) : lstat(name, buff)) == -1)
+	if ((stat(name, buff) == -1) ? (lstat(name, buff) == -1) : 0)
 	{
 		perror_report(name);
 		return (1);
@@ -104,11 +95,11 @@ int			main(int ac, char **av)
 			i++;
 		else
 			break ;
+	ft_strarr_sort(av + i, ac - i);
 	while (i < ac)
 		parsed_path += pathtolist(av[i++], &filelst, &dirlst);
 	if (!parsed_path)
 		pathtolist(".", &filelst, &dirlst);
 	process_input(filelst, dirlst, parsed_path);
-//system("leaks ft_ls");
 	return (0);
 }

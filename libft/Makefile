@@ -6,7 +6,7 @@
 #    By: mpetruno <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/05/25 18:27:37 by mpetruno          #+#    #+#              #
-#    Updated: 2018/11/09 11:03:13 by mpetruno         ###   ########.fr        #
+#    Updated: 2018/11/21 14:51:44 by mpetruno         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -91,7 +91,9 @@ FUNC_LIST = memset \
 			lstmap \
 			lltoa_base \
 			ulltoa_base \
-			dtoa
+			dtoa \
+			strsort \
+			strarr_sort
 
 PRINTF_FILES = ft_printf.c \
 				parsing.c \

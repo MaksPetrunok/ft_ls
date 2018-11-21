@@ -1,29 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   colors.h                                           :+:      :+:    :+:   */
+/*   aux.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mpetruno <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/11/21 15:06:24 by mpetruno          #+#    #+#             */
-/*   Updated: 2018/11/21 15:07:34 by mpetruno         ###   ########.fr       */
+/*   Created: 2018/11/21 16:25:15 by mpetruno          #+#    #+#             */
+/*   Updated: 2018/11/21 16:25:40 by mpetruno         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef COLORS_H
-# define COLORS_H
+#include "ft_ls.h"
 
-# define RESET		"\x1b[0m"
-# define BOLD		"\x1b[1m"
-# define DEFAULT	"\x1b[39m"
+char	*add_parent(const char *name, const char *parent)
+{
+	char	*dir;
+	char	*res;
 
-# define BLACK		"\x1b[30m"
-# define RED		"\x1b[31m"
-# define GREEN		"\x1b[32m"
-# define YELLOW		"\x1b[33m"
-# define BLUE		"\x1b[94m"
-# define BLUE_BD	"\x1b[94;1m"
-# define MAGENTA	"\x1b[35m"
-# define CYAN		"\x1b[36m"
-
-#endif
+	if ((dir = ft_strjoin(parent, "/")) == 0)
+		perror_exit("");
+	if ((res = ft_strjoin(dir, name)) == 0)
+		perror_exit("");
+	free((void *)dir);
+	return (res);
+}

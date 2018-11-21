@@ -6,7 +6,7 @@
 /*   By: mpetruno <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/01 16:13:58 by mpetruno          #+#    #+#             */
-/*   Updated: 2018/11/20 21:58:14 by mpetruno         ###   ########.fr       */
+/*   Updated: 2018/11/21 14:44:53 by mpetruno         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,8 +45,13 @@ void	perror_exit(const char *str)
 
 void	error_option(char opt)
 {
+	char	*flags;
+
+	flags = ft_strdup(FLAGS);
+	ft_strsort(flags);
 	ft_dprintf(STDERR,
 		"%s: illegal option -- %c\nusage: ls [-%s] [file ...]\n",
-		PROGRAM_NAME, opt, FLAGS);
+		PROGRAM_NAME, opt, flags);
+	free((void *)flags);
 	exit(1);
 }

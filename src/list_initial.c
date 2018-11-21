@@ -6,7 +6,7 @@
 /*   By: mpetruno <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/31 20:55:01 by mpetruno          #+#    #+#             */
-/*   Updated: 2018/11/20 21:39:19 by mpetruno         ###   ########.fr       */
+/*   Updated: 2018/11/21 15:26:28 by mpetruno         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@ void	process_input(t_list *files, t_list *dirs, int print_dir)
 	int	size;
 
 	size = ft_lstsize(dirs);
-//	print_dir_name = size > 1 || (files && dirs);
 	print_dir_name = print_dir > 1;
 	list_files(files, 0);
 	if (files && dirs)

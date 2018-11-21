@@ -6,13 +6,13 @@
 /*   By: mpetruno <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/05 20:52:09 by mpetruno          #+#    #+#             */
-/*   Updated: 2018/11/20 19:01:25 by mpetruno         ###   ########.fr       */
+/*   Updated: 2018/11/21 15:37:01 by mpetruno         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
 
-void	init_fmt(t_dout *fmt)
+void		init_fmt(t_dout *fmt)
 {
 	fmt->total = 0;
 	fmt->ino_len = 0;
@@ -25,9 +25,10 @@ void	init_fmt(t_dout *fmt)
 	fmt->xat_acl = 0;
 }
 
-char	*get_size(struct stat *st, char *buff)
+char		*get_size(struct stat *st, char *buff)
 {
 	char	*ptr;
+
 	if (ISCHR(st->st_mode) || ISBLK(st->st_mode))
 	{
 		ft_ulltoa_base(st->st_rdev >> 24 & 0xFFF, 10, 0, buff);
@@ -41,7 +42,7 @@ char	*get_size(struct stat *st, char *buff)
 	return (buff);
 }
 
-int		get_sizelen(struct stat *st)
+int			get_sizelen(struct stat *st)
 {
 	int	len;
 
@@ -53,7 +54,7 @@ int		get_sizelen(struct stat *st)
 	return (len);
 }
 
-static void    set_xattr_acl(t_path *path)
+static void	set_xattr_acl(t_path *path)
 {
 	acl_t		acl;
 	acl_entry_t	acl_ent;
@@ -64,22 +65,13 @@ static void    set_xattr_acl(t_path *path)
 		path->xat_acl = ' ';
 		return ;
 	}
-#ifndef ON_LINUX
 	acl = acl_get_link_np(path->path, ACL_TYPE_EXTENDED);
 	if (acl && acl_get_entry(acl, ACL_FIRST_ENTRY, &acl_ent) == -1)
 	{
 		acl_free(acl);
 		acl = 0;
 	}
-#endif
-
-#ifdef ON_LINUX
-	if ((xattr = ISFLAG_LL(g_flags) ?
-		listxattr(path->path, 0, 0) : llistxattr(path->path, 0, 0)) < 0)
-#else
 	if ((xattr = listxattr(path->path, 0, 0, XATTR_NOFOLLOW)) < 0)
-//					ISFLAG_LL(g_flags))) < 0)
-#endif
 		xattr = 0;
 	if (xattr > 0)
 		path->xat_acl = '@';
@@ -90,7 +82,7 @@ static void    set_xattr_acl(t_path *path)
 	acl_free(acl);
 }
 
-void	fill_fmt(t_dout *fmt, t_list *lst)
+void		fill_fmt(t_dout *fmt, t_list *lst)
 {
 	int			tmp;
 	struct stat	*st;
@@ -111,7 +103,7 @@ void	fill_fmt(t_dout *fmt, t_list *lst)
 		fmt->own_len = (tmp > fmt->own_len) ? tmp : fmt->own_len;
 		tmp = ft_strlen(get_group(st->st_gid)) + 1;
 		fmt->grp_len = (tmp > fmt->grp_len) ? tmp : fmt->grp_len;
-		tmp = get_sizelen(st); //ft_numlen(get_size(st));
+		tmp = get_sizelen(st);
 		fmt->size_len = (tmp > fmt->size_len) ? tmp : fmt->size_len;
 		set_xattr_acl(VP(lst->content));
 		lst = lst->next;
