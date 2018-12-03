@@ -6,7 +6,7 @@
 /*   By: mpetruno <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/31 20:55:01 by mpetruno          #+#    #+#             */
-/*   Updated: 2018/11/21 15:39:44 by mpetruno         ###   ########.fr       */
+/*   Updated: 2018/12/03 22:19:19 by mpetruno         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,9 @@ static int	pathtolist(char *name, t_list **files, t_list **dirs)
 	if ((stat(name, buff) == -1) ? (lstat(name, buff) == -1) : 0)
 	{
 		perror_report(name);
+		free((void *)elem);
+		free((void *)buff);
+		free((void *)path);
 		return (1);
 	}
 	path->name = ft_strdup(name);
@@ -101,5 +104,6 @@ int			main(int ac, char **av)
 	if (!parsed_path)
 		pathtolist(".", &filelst, &dirlst);
 	process_input(filelst, dirlst, parsed_path);
+	system("leaks ft_ls");
 	return (0);
 }
