@@ -104,6 +104,5 @@ int			main(int ac, char **av)
 	if (!parsed_path)
 		pathtolist(".", &filelst, &dirlst);
 	process_input(filelst, dirlst, parsed_path);
-	system("leaks ft_ls");
 	return (0);
 }
